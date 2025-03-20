@@ -1,0 +1,44 @@
+@using Radzen2.Model
+@inject UserService userService
+@inject DialogService DialogService
+
+
+
+<div class="p-4">
+    <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H2" class="rz-mb-4">Usuários Cadastrados</RadzenText>
+
+    @if (!users.Any())
+    {
+        <RadzenText Text="Nenhum usuário cadastrado ainda." class="rz-mt-4 text-gray-500" />
+    }
+    else
+    {
+        @foreach (var user in users)
+        {
+            <RadzenCard class="rz-mb-3" style="width: 100%;">
+                <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H3" class="rz-mb-2">@($"{user.Name} {user.LastName}")</RadzenText>
+                <RadzenText Text="@($"Telefone: {user.Phone}")" class="rz-mb-1" />
+                <RadzenText Text="@($"Email: {user.Email}")" class="rz-mb-1" />
+                <RadzenButton Text="Delete" ButtonStyle="ButtonStyle.Dark" Click="() => DeleteUser(user) "/>
+            </RadzenCard>
+        }
+    }
+
+    <RadzenButton Text="Fechar" ButtonStyle="ButtonStyle.Secondary" class="rz-mt-4" Click="@(() => DialogService.Close())" />
+</div>
+
+@code {
+    private List<UserModel> users = new();
+
+    protected override void OnInitialized()
+    {
+        users = userService.GetUserList() ?? new List<UserModel>();
+    }
+
+    private void DeleteUser(UserModel user)
+    {
+        userService.DeleteUser(user);
+        users = userService.GetUserList() ?? new List<UserModel>();
+    }
+
+}

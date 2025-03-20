@@ -1,0 +1,81 @@
+﻿@page "/"
+@using Radzen2.Components
+@using Radzen2.Model
+@inject NotificationService NotificationService
+@inject UserService userService
+@inject DialogService DialogService
+
+<PageTitle>Home</PageTitle>
+
+<RadzenDialog />
+
+<div class="centralized">
+    <RadzenCard class="rz-my-6 rz-mx-auto flex justify-center items-center h-screen rz-custom-background" style="width: 700px;">
+        <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H2" class="rz-mb-4 rz-mx-auto">Cadastro de Usuário</RadzenText>
+
+        <RadzenTemplateForm TItem="UserModel" Data="@user" Submit="@ShowNotification">
+            <RadzenStack Gap="1rem">
+                <RadzenFormField Text="Nome" Variant="Variant.Flat">
+                    <RadzenTextBox @bind-Value="@user.Name" Name="Name" />
+                    <RadzenRequiredValidator Component="Name" Text="Nome é obrigatório" />
+                </RadzenFormField>
+
+                <RadzenFormField Text="Sobrenome" Variant="Variant.Flat">
+                    <RadzenTextBox @bind-Value="@user.LastName" Name="LastName" />
+                    <RadzenRequiredValidator Component="LastName" Text="Sobrenome é obrigatório" />
+                </RadzenFormField>
+
+                <RadzenFormField Text="Telefone" Variant="Variant.Flat">
+                    <RadzenTextBox @bind-Value="@user.Phone" Name="Phone" />
+                    <RadzenRequiredValidator Component="Phone" Text="Telefone é obrigatório" />
+                </RadzenFormField>
+
+                <RadzenFormField Text="Email" Variant="Variant.Flat">
+                    <RadzenTextBox @bind-Value="@user.Email" Name="Email" />
+                    <RadzenRequiredValidator Component="Email" Text="Email é obrigatório" />
+                    <RadzenEmailValidator Component="Email" Text="Formato de email inválido" />
+                </RadzenFormField>
+
+                <RadzenFormField Text="Senha" Variant="Variant.Flat">
+                    <RadzenPassword @bind-Value="@user.Password" Name="Password" />
+                    <RadzenRequiredValidator Component="Password" Text="Senha é obrigatória" />
+                    <RadzenLengthValidator Component="Password" Min="6" Text="A senha deve ter pelo menos 6 caracteres" />
+                </RadzenFormField>
+
+                <RadzenButton Text="Enviar" ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary" class="rz-mt-4" />
+            </RadzenStack>
+        </RadzenTemplateForm>
+
+
+        <RadzenButton Text="Ver Usuários Cadastrados" ButtonStyle="ButtonStyle.Secondary" class="rz-mt-4" Click="@ShowUsersModal" />
+    </RadzenCard>
+</div>
+
+@code {
+    private UserModel user = new UserModel();
+
+    void ShowNotification()
+    {
+        NotificationService.Notify(new NotificationMessage
+        {
+            Severity = NotificationSeverity.Success,
+            Summary = "Sucesso!",
+            Detail = "Seu registro foi concluído com sucesso!",
+            Duration = 4000
+        });
+
+        userService.AddUser(user);
+        user = new UserModel();
+    }
+
+    void ShowUsersModal()
+    {
+        DialogService.Open<UserList>(
+            "Usuários Cadastrados",
+            new Dictionary<string, object>(), 
+            new DialogOptions { Width = "600px", Height = "400px" } 
+        );
+    }
+
+
+}
