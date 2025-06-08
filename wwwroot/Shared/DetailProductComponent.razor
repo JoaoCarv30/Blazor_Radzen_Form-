@@ -1,0 +1,13 @@
+@using Radzen2.Model
+
+<div>
+    <img src="@Product.Image" alt="" style="max-width: 100%;">
+    <h4>@Product.Title</h4>
+    <p>@Product.Description</p>
+    <strong>$@Product.Price</strong>
+</div>
+
+@code {
+    [Parameter]
+    public ProductsModel Product { get; set; } = new(); 
+}

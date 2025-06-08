@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Radzen2")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+379e1dddc7e00f6a765d6b0d9bb827ef61a85219")]
 [assembly: System.Reflection.AssemblyProductAttribute("Radzen2")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Radzen2")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -1,0 +1,65 @@
+@page "/ProductsPage"
+@using System.Text.Json
+@using Radzen2.Model
+@using Radzen2.wwwroot.Shared
+
+@inject HttpClient HttpClient
+@inject DialogService DialogService
+
+@foreach (var item in products)
+{
+    <CardProductComponent Product="@item" OnClick="() => OpenCardDetails(item)"  />
+}
+
+@code {
+    private List<ProductsModel> products = new List<ProductsModel>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await FetchDataAsync();
+    }
+
+    private async Task FetchDataAsync()
+    {
+        try
+        {
+            var response = await HttpClient.GetAsync("https://fakestoreapi.com/products");
+            if (response.IsSuccessStatusCode)
+            {
+                var data = await response.Content.ReadAsStringAsync();
+                var jsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                products = JsonSerializer.Deserialize<List<ProductsModel>>(data, jsonOptions);
+            }
+            else
+            {
+                Console.WriteLine("Error fetching data");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Exception occurred: {ex.Message}");
+        }
+    }
+
+    private async Task OpenCardDetails(ProductsModel product)
+    {
+        
+        await DialogService.OpenAsync<DetailProductComponent>(
+            product.Title,
+            new Dictionary<string, object>
+            {
+                { "Product", product }
+            },
+            new DialogOptions
+            {
+                Width = "450px",
+                Style = "top: 0; right: 0; margin: 0; border-radius: 0; height: 100vh; position: fixed;",
+                CloseDialogOnOverlayClick = true,
+                ShowClose = true
+            }
+        );
+        
+        
+    }
+
+}
